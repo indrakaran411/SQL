@@ -1,0 +1,54 @@
+-- Create tables for patient information
+CREATE TABLE Patients (
+    patient_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    date_of_birth DATE,
+    gender VARCHAR(10),
+    address VARCHAR(200),
+    phone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+-- Create tables for medical histories
+CREATE TABLE MedicalHistories (
+    history_id INT PRIMARY KEY,
+    patient_id INT,
+    visit_date DATE,
+    diagnosis TEXT,
+    treatment TEXT,
+    PRIMARY KEY (patient_id, visit_date),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id)
+);
+
+-- Create table for billing information
+CREATE TABLE Bills (
+    bill_id INT PRIMARY KEY,
+    patient_id INT,
+    visit_date DATE,
+    amount DECIMAL(10, 2),
+    payment_status VARCHAR(20),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id)
+);
+
+-- Create table for medical staff
+CREATE TABLE MedicalStaff (
+    staff_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    specialization VARCHAR(100),
+    phone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+-- Create table for appointments
+CREATE TABLE Appointments (
+    appointment_id INT PRIMARY KEY,
+    patient_id INT,
+    staff_id INT,
+    appointment_date DATETIME,
+    duration_minutes INT,
+    appointment_purpose VARCHAR(200),
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (staff_id) REFERENCES MedicalStaff(staff_id)
+);

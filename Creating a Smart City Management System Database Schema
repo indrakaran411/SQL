@@ -1,0 +1,84 @@
+-- Create table for IoT sensors
+CREATE TABLE Sensors (
+    sensor_id INT PRIMARY KEY,
+    sensor_type VARCHAR(50),
+    location GEOMETRY,
+    installation_date DATE
+);
+
+-- Create table for traffic cameras
+CREATE TABLE TrafficCameras (
+    camera_id INT PRIMARY KEY,
+    location GEOMETRY,
+    installation_date DATE
+);
+
+-- Create table for weather stations
+CREATE TABLE WeatherStations (
+    station_id INT PRIMARY KEY,
+    location GEOMETRY,
+    installation_date DATE
+);
+
+-- Create table for public utilities
+CREATE TABLE PublicUtilities (
+    utility_id INT PRIMARY KEY,
+    utility_type VARCHAR(100),
+    location GEOMETRY,
+    installation_date DATE
+);
+
+-- Create table for traffic data
+CREATE TABLE TrafficData (
+    data_id INT PRIMARY KEY,
+    sensor_id INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    speed INT,
+    vehicle_count INT,
+    FOREIGN KEY (sensor_id) REFERENCES Sensors(sensor_id)
+);
+
+-- Create table for weather data
+CREATE TABLE WeatherData (
+    data_id INT PRIMARY KEY,
+    station_id INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    temperature DECIMAL(5,2),
+    humidity DECIMAL(5,2),
+    precipitation DECIMAL(5,2),
+    FOREIGN KEY (station_id) REFERENCES WeatherStations(station_id)
+);
+
+-- Create table for utility data
+CREATE TABLE UtilityData (
+    data_id INT PRIMARY KEY,
+    utility_id INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usage DECIMAL(10,2),
+    FOREIGN KEY (utility_id) REFERENCES PublicUtilities(utility_id)
+);
+
+-- Create table for emergencies
+CREATE TABLE Emergencies (
+    emergency_id INT PRIMARY KEY,
+    emergency_type VARCHAR(100),
+    location GEOMETRY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create table for emergency response teams
+CREATE TABLE EmergencyTeams (
+    team_id INT PRIMARY KEY,
+    team_name VARCHAR(100),
+    team_type VARCHAR(100)
+);
+
+-- Create table for emergency responses
+CREATE TABLE EmergencyResponses (
+    response_id INT PRIMARY KEY,
+    emergency_id INT,
+    team_id INT,
+    response_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (emergency_id) REFERENCES Emergencies(emergency_id),
+    FOREIGN KEY (team_id) REFERENCES EmergencyTeams(team_id)
+);

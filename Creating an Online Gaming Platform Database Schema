@@ -1,0 +1,88 @@
+-- Create tables for users
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100),
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create tables for games
+CREATE TABLE Games (
+    game_id INT PRIMARY KEY,
+    game_name VARCHAR(100),
+    genre VARCHAR(50),
+    release_date DATE,
+    developer VARCHAR(100)
+);
+
+-- Create tables for user-game relationships
+CREATE TABLE UserGames (
+    user_id INT,
+    game_id INT,
+    playtime_minutes INT DEFAULT 0,
+    last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, game_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (game_id) REFERENCES Games(game_id)
+);
+
+-- Create tables for achievements
+CREATE TABLE Achievements (
+    achievement_id INT PRIMARY KEY,
+    achievement_name VARCHAR(100),
+    description TEXT
+);
+
+-- Create tables for user achievements
+CREATE TABLE UserAchievements (
+    user_id INT,
+    achievement_id INT,
+    unlocked_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, achievement_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id)
+);
+
+-- Create tables for in-game transactions
+CREATE TABLE Transactions (
+    transaction_id INT PRIMARY KEY,
+    user_id INT,
+    game_id INT,
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    amount DECIMAL(10, 2),
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (game_id) REFERENCES Games(game_id)
+);
+
+-- Create tables for player analytics
+CREATE TABLE PlayerAnalytics (
+    user_id INT,
+    game_id INT,
+    play_date DATE,
+    playtime_minutes INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (game_id) REFERENCES Games(game_id)
+);
+
+-- Create tables for matchmaking
+CREATE TABLE Matchmaking (
+    matchmaking_id INT PRIMARY KEY,
+    user_id INT,
+    game_id INT,
+    matchmaking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (game_id) REFERENCES Games(game_id)
+);
+
+-- Create tables for leaderboards
+CREATE TABLE Leaderboards (
+    leaderboard_id INT PRIMARY KEY,
+    game_id INT,
+    user_id INT,
+    score INT,
+    rank INT,
+    FOREIGN KEY (game_id) REFERENCES Games(game_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
